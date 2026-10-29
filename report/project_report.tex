@@ -28,7 +28,7 @@
 \textbf{Web application design and implementation report}
 
 \section*{Abstract}
-Draftroom is a web application that turns a short writing brief into a blog article using a visible multi-stage agent workflow. A planner proposes an angle and outline, a writer creates a Markdown draft, a reviewer checks its quality, a reviser improves rejected work, and a final editor suggests titles and opening hooks. The application was built with Express 5 on Node.js and browser JavaScript. It includes a clearly labeled sample mode for demonstrations and an AI mode that calls the OpenAI API from the server. The project source and deployment instructions are available at \url{https://github.com/yoclipit/draftroom-agent}.
+Draftroom is a web application that turns a short writing brief into a blog article using a visible multi-stage agent workflow. A planner proposes an angle and outline, a writer creates a Markdown draft, a reviewer checks its quality, a reviser improves rejected work, and a final editor suggests titles and opening hooks. The application was built with Express 5 on Node.js and browser JavaScript. It includes a clearly labeled sample mode for demonstrations and an AI mode that calls the OpenAI API from the server. The live website is \url{https://draftroom-agent.onrender.com}; the project source is \url{https://github.com/yoclipit/draftroom-agent}.
 
 \section{Problem and Goal}
 Starting with a topic alone often leads to an unfocused article. Draftroom asks for the intended audience, tone, goal, points to cover, and approximate length. It then exposes the writing process instead of showing only a final answer. The user can inspect the plan and editorial notes, copy the Markdown, or download it for further editing.
@@ -71,7 +71,7 @@ Structured JSON responses are requested for planning, review, and title generati
 Sample mode runs the visible sequence without contacting a model. Its output is explicitly marked illustrative. AI mode requires \texttt{OPENAI\_API\_KEY} in the server environment; no real key is stored in the project. The model can be changed with \texttt{OPENAI\_MODEL}.
 
 \section{Verification and Limitations}
-Four automated tests pass. They check brief validation, sample-stage events, a mocked AI workflow that rejects and revises a draft, and the HTTP server's streaming response and separation of the API key from browser data. The app was also opened in a browser and the sample workflow completed successfully.
+Four automated tests pass. They check brief validation, sample-stage events, a mocked AI workflow that rejects and revises a draft, and the HTTP server's streaming response and separation of the API key from browser data. The deployed website was opened in a browser and the sample workflow completed successfully.
 
 The live AI path was tested with a local mock service, not a personal API key. Model output may contain factual errors; the reviewer checks the writing brief and editorial quality but does not independently verify external claims. A person should check facts, citations, course policy, and final wording before publishing.
 
@@ -80,7 +80,8 @@ The live AI path was tested with a local mock service, not a personal API key. M
   \item \textbf{GitHub repository:} \url{https://github.com/yoclipit/draftroom-agent}
   \item \textbf{Application source and tests:} linked in the repository above.
   \item \textbf{Local application:} run \texttt{npm start} and open \url{http://localhost:3000}.
-  \item \textbf{Public deployment:} a Render blueprint is included as \texttt{render.yaml}. A live public URL requires connecting the repository to a Render account.
+  \item \textbf{Live application:} \url{https://draftroom-agent.onrender.com}
+  \item \textbf{Deployment configuration:} a Render blueprint is included as \texttt{render.yaml}.
 \end{itemize}
 
 \section*{References}

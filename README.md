@@ -2,6 +2,8 @@
 
 Draftroom is a web app that turns a short writing brief into a planned, reviewed blog article. Its agent workflow follows a **plan → write → review → revise → package** cycle. A sample mode makes the flow easy to demonstrate without an API key; AI mode calls the OpenAI API from the server.
 
+**Live website:** [https://draftroom-agent.onrender.com](https://draftroom-agent.onrender.com)
+
 ## Run locally
 
 Requires Node.js 20 or newer. The server uses Express 5.
@@ -65,6 +67,8 @@ On this Windows PowerShell setup, use `npm.cmd` instead of `npm`.
 The live workflow test uses a local mock API and verifies that a rejected article is revised and reviewed again. A real AI generation requires your own API key and account access.
 
 ## Deploy on Render
+
+The app is deployed at [draftroom-agent.onrender.com](https://draftroom-agent.onrender.com) on Render's free web service plan. To deploy your own copy:
 
 1. Push this repository to GitHub.
 2. In Render, create a **Blueprint** from the repository and apply `render.yaml`.
