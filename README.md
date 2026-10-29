@@ -37,6 +37,10 @@ The default model is `gpt-4o-mini`. Set `OPENAI_MODEL` to use another compatible
 
 The app streams each stage to the browser as Server Sent Events. The result includes the article, editor notes, outline, title ideas, and a Markdown download. Sample mode runs illustrative local content through the same visible stages; it is clearly labeled as a simulation.
 
+## Project report
+
+The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/project_report.pdf) explain the architecture, implementation, tests, and deployment status.
+
 ## Project structure
 
 | File | Purpose |
