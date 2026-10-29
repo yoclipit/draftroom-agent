@@ -1,0 +1,91 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue!50!black,linkcolor=blue!50!black,pdftitle={Draftroom: Agentic Blog Writing Web Application}}
+\definecolor{ink}{HTML}{1C302F}
+\definecolor{accent}{HTML}{BD6842}
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{document}
+
+{\color{accent}\small PROJECT REPORT \hfill OCTOBER 2026}\par
+\vspace{0.35em}
+{\Huge\bfseries Draftroom}\par
+{\Large An Agentic Blog Writing Web Application}\par
+\vspace{0.45em}
+\hrule
+\vspace{0.7em}
+\textbf{Web application design and implementation report}
+
+\section*{Abstract}
+Draftroom is a web application that turns a short writing brief into a blog article using a visible multi-stage agent workflow. A planner proposes an angle and outline, a writer creates a Markdown draft, a reviewer checks its quality, a reviser improves rejected work, and a final editor suggests titles and opening hooks. The application was built with Node.js and browser JavaScript. It includes a clearly labeled sample mode for demonstrations and an AI mode that calls the OpenAI API from the server. The project source and deployment instructions are available at \url{https://github.com/yoclipit/draftroom-agent}.
+
+\section{Problem and Goal}
+Starting with a topic alone often leads to an unfocused article. Draftroom asks for the intended audience, tone, goal, points to cover, and approximate length. It then exposes the writing process instead of showing only a final answer. The user can inspect the plan and editorial notes, copy the Markdown, or download it for further editing.
+
+The design follows a planner--writer--checker pattern. A quality loop needs an explicit stopping condition, so Draftroom ends its review cycle when the reviewer approves the article or after one revision and a final review.
+
+\section{System Architecture}
+The browser sends the brief to a Node.js HTTP server. The server validates the inputs, runs the agent stages in order, and streams progress events back to the page using Server-Sent Events. In AI mode, only the server communicates with the model API. The API key is read from an environment variable and is never included in the browser response or repository.
+
+\begin{center}
+\fbox{\begin{minipage}{0.92\linewidth}
+\centering
+Browser brief $\longrightarrow$ Node.js server $\longrightarrow$ Planner $\longrightarrow$ Writer\\[0.35em]
+$\hspace{2em}\downarrow$\\[-0.2em]
+Editor/title ideas $\longleftarrow$ Reviewer $\longleftrightarrow$ Reviser\\[0.35em]
+\small The reviewer/reviser connection is bounded to one revision.
+\end{minipage}}
+\end{center}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.16\linewidth}p{0.36\linewidth}p{0.38\linewidth}}
+\toprule
+Stage & Input & Output \\
+\midrule
+Planner & Topic, audience, tone, goal, constraints & Working title, angle, section outline \\
+Writer & Brief and outline & Markdown article \\
+Reviewer & Brief and draft & Approval decision, score, strengths, fixes \\
+Reviser & Rejected draft and fixes & Complete improved draft \\
+Packager & Final article and brief & Three title ideas and two opening hooks \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Implementation}
+The server uses only Node.js built-in modules, so the project has no package dependencies. The interface uses HTML, CSS, and browser JavaScript. It is responsive, supports keyboard navigation, and renders article text with DOM text nodes rather than injecting model output as HTML. The server accepts only the defined API route and static files, limits brief size, and applies a simple per-IP request limit.
+
+Structured JSON responses are requested for planning, review, and title generation. The article itself is returned as Markdown. Each stage sends a progress event to the browser, which updates the activity list. The reviewer returns an approval decision and concrete changes. If the draft is rejected, the reviser produces a new complete article and the reviewer evaluates it once more. This gives the loop both a success condition and a hard upper bound.
+
+Sample mode runs the visible sequence without contacting a model. Its output is explicitly marked illustrative. AI mode requires \texttt{OPENAI\_API\_KEY} in the server environment; no real key is stored in the project. The model can be changed with \texttt{OPENAI\_MODEL}.
+
+\section{Verification and Limitations}
+Four automated tests pass. They check brief validation, sample-stage events, a mocked AI workflow that rejects and revises a draft, and the HTTP server's streaming response and separation of the API key from browser data. The app was also opened in a browser and the sample workflow completed successfully.
+
+The live AI path was tested with a local mock service, not a personal API key. Model output may contain factual errors; the reviewer checks the writing brief and editorial quality but does not independently verify external claims. A person should check facts, citations, course policy, and final wording before publishing.
+
+\section{Artifacts and Access}
+\begin{itemize}
+  \item \textbf{GitHub repository:} \url{https://github.com/yoclipit/draftroom-agent}
+  \item \textbf{Application source and tests:} linked in the repository above.
+  \item \textbf{Local application:} run \texttt{npm start} and open \url{http://localhost:3000}.
+  \item \textbf{Public deployment:} a Render blueprint is included as \texttt{render.yaml}. A live public URL requires connecting the repository to a Render account.
+\end{itemize}
+
+\section*{References}
+\begin{enumerate}
+  \item OpenAI, ``Create chat completion,'' \url{https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create}.
+  \item OpenAI, ``Structured model outputs,'' \url{https://developers.openai.com/api/docs/guides/structured-outputs}.
+\end{enumerate}
+
+\end{document}
