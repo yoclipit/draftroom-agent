@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ec">
+  <meta name="description" content="Draftroom turns a writing brief into a planned, reviewed, and refined blog post.">
+  <title>Draftroom — the thoughtful writing studio</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Draftroom home">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>draftroom<span class="brand-period">.</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#workspace">The studio</a>
+      </nav>
+      <span class="header-label">A SMALL WRITING STUDIO <span class="header-star" aria-hidden="true">✳</span> BIGGER IDEAS</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR IDEAS, BETTER DEVELOPED</div>
+          <h1 id="hero-title">A draft with a <em>plan</em> behind it<span class="hero-dot">.</span></h1>
+          <p>Give us the seed of an idea. A team of agents maps the story, writes a first draft, checks its work, and makes it sharper.</p>
+          <a class="hero-link" href="#workspace">Start a new draft <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit art-orbit-one"></div>
+          <div class="art-orbit art-orbit-two"></div>
+          <div class="art-note art-note-back"><span class="note-kicker">01 / THE IDEA</span><span class="note-line short"></span><span class="note-line"></span><span class="note-line mid"></span></div>
+          <div class="art-note art-note-front"><span class="note-kicker">YOUR NEXT GREAT READ</span><span class="note-title">Make space<br>for the good<br><i>ideas.</i></span><span class="note-rule"></span><span class="note-line"></span><span class="note-line short"></span></div>
+          <div class="art-seal">THINK<br><span>↗</span><br>WRITE</div>
+          <span class="art-spark art-spark-one">✳</span><span class="art-spark art-spark-two">✳</span>
+        </div>
+      </section>
+
+      <section class="how" id="how-it-works" aria-label="How Draftroom works">
+        <div class="how-intro"><span class="section-number">01 / THE PROCESS</span><strong>Good writing is a process.<br><em>We made it visible.</em></strong></div>
+        <div class="how-step"><span>01</span><strong>Plan</strong><p>Find the angle and organize the story.</p></div>
+        <div class="how-step"><span>02</span><strong>Write</strong><p>Turn that structure into a first draft.</p></div>
+        <div class="how-step"><span>03</span><strong>Review</strong><p>Check clarity, coverage, and flow.</p></div>
+        <div class="how-step"><span>04</span><strong>Refine</strong><p>Revise when needed and explore new titles.</p></div>
+      </section>
+
+      <section class="workspace-section" id="workspace" aria-labelledby="workspace-title">
+        <div class="section-heading">
+          <div><span class="section-number">02 / YOUR STUDIO</span><h2 id="workspace-title">Let's make something <em>worth reading.</em></h2></div>
+          <div class="mode-pill" id="modePill"><span class="mode-dot"></span><span id="modeText">Checking AI connection…</span></div>
+        </div>
+        <div class="workspace-grid">
+          <section class="brief-card" aria-labelledby="brief-title">
+            <div class="card-header"><span class="card-index">A</span><div><h3 id="brief-title">The brief</h3><p>A few details give the agents a better direction.</p></div></div>
+            <form id="briefForm">
+              <div class="field">
+                <label for="topic">What's the topic? <span>*</span></label>
+                <input id="topic" name="topic" type="text" maxlength="160" required minlength="8" value="How college students can use AI responsibly" placeholder="e.g. How to build better study habits">
+                <small>The more specific, the better.</small>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="audience">Who is it for? <span>*</span></label><input id="audience" name="audience" type="text" maxlength="100" required minlength="3" value="College students" placeholder="e.g. First-year students"></div>
+                <div class="field"><label for="tone">What should it sound like?</label><select id="tone" name="tone"><option>Clear and approachable</option><option>Warm and conversational</option><option>Thoughtful and professional</option><option>Bold and energetic</option></select></div>
+              </div>
+              <div class="field"><label for="goal">What should readers take away?</label><input id="goal" name="goal" type="text" maxlength="180" value="Give readers a practical framework they can use today." placeholder="e.g. Three actions they can try today"></div>
+              <div class="field"><label for="mustInclude">Anything it should cover?</label><textarea id="mustInclude" name="mustInclude" maxlength="500" rows="3" placeholder="Ideas, examples, questions, or points to include">Checking accuracy, protecting privacy, and using AI to support learning</textarea></div>
+              <div class="field field-length"><label for="wordCount">How long should it be?</label><select id="wordCount" name="wordCount"><option value="350">Short read · ~350 words</option><option value="550" selected>Medium read · ~550 words</option><option value="750">Deep dive · ~750 words</option></select></div>
+              <div class="field"><label for="writingMode">Writing mode</label><select id="writingMode" name="writingMode"><option value="demo">Sample workflow (no API key)</option><option value="live" disabled>Generate with AI (needs server key)</option></select></div>
+              <div class="form-actions"><button class="primary-button" id="generateButton" type="submit">Run sample workflow <span aria-hidden="true">↗</span></button><button class="secondary-button" id="cancelButton" type="button" hidden>Cancel</button></div>
+              <p class="form-note" id="formNote">Sample mode shows the workflow with illustrative content. Add a server API key to generate with AI.</p>
+              <p class="form-error" id="formError" role="alert" hidden></p>
+            </form>
+          </section>
+
+          <section class="output-card" aria-labelledby="output-title">
+            <div class="card-header output-header"><span class="card-index">B</span><div><h3 id="output-title">The draft</h3><p>See the thinking behind your finished piece.</p></div><span class="output-state" id="outputState">READY WHEN YOU ARE</span></div>
+
+            <div class="empty-state" id="emptyState">
+              <div class="empty-illustration" aria-hidden="true"><div class="empty-page empty-page-back"></div><div class="empty-page empty-page-front"><span></span><span></span><span></span></div><div class="empty-sun">✳</div></div>
+              <span class="empty-eyebrow">A GOOD IDEA STARTS HERE</span>
+              <h4>Your next article<br>is waiting to happen.</h4>
+              <p>Fill in the brief and watch each step unfold.</p>
+            </div>
+
+            <div class="activity" id="activity" hidden>
+              <div class="activity-heading"><div><span class="small-eyebrow">WORKFLOW IN PROGRESS</span><h4 id="activityTitle">Putting the pieces together</h4></div><span class="activity-spinner" id="activitySpinner" aria-hidden="true"></span></div>
+              <div class="stage-list" id="stageList" aria-live="polite"></div>
+            </div>
+
+            <div class="result" id="result" hidden>
+              <div class="result-banner"><div><span class="small-eyebrow" id="resultMode">SAMPLE WORKFLOW</span><h4 id="resultHeading">Your draft is ready.</h4></div><div class="score-badge"><strong id="scoreValue">—</strong><span>EDITOR SCORE</span></div></div>
+              <p class="result-disclaimer" id="resultDisclaimer"></p>
+              <div class="tabs" role="tablist" aria-label="Draft details"><button class="tab active" id="articleTab" role="tab" aria-selected="true" aria-controls="articlePanel" type="button">Article</button><button class="tab" id="processTab" role="tab" aria-selected="false" aria-controls="processPanel" type="button">Behind the draft</button></div>
+              <div class="tab-panel" id="articlePanel" role="tabpanel" aria-labelledby="articleTab">
+                <div class="article-actions"><span id="wordCountLabel">0 words</span><div><button class="text-button" id="copyButton" type="button">Copy Markdown</button><button class="text-button" id="downloadButton" type="button">Download .md</button></div></div>
+                <article class="article-body" id="articleBody"></article>
+              </div>
+              <div class="tab-panel process-panel" id="processPanel" role="tabpanel" aria-labelledby="processTab" hidden>
+                <div class="process-block"><span class="process-label">THE PLAN</span><h5 id="planTitle"></h5><p id="planAngle"></p><ol id="planOutline"></ol></div>
+                <div class="process-block"><span class="process-label">EDITOR'S NOTES</span><div class="review-summary" id="reviewSummary"></div><ul id="reviewNotes"></ul></div>
+                <div class="process-block"><span class="process-label">MORE WAYS IN</span><h5>Alternative titles</h5><ul id="titleOptions"></ul><h5>Opening hooks</h5><ul id="hookOptions"></ul></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><span class="footer-brand">draftroom<span>.</span></span><span>Plan with intention. Write with clarity.</span><span>Made for the curious mind <span aria-hidden="true">✳</span></span></footer>
+  </div>
+</body>
+</html>
