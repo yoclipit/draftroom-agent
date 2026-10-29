@@ -28,7 +28,7 @@
 \textbf{Web application design and implementation report}
 
 \section*{Abstract}
-Draftroom is a web application that turns a short writing brief into a blog article using a visible multi-stage agent workflow. A planner proposes an angle and outline, a writer creates a Markdown draft, a reviewer checks its quality, a reviser improves rejected work, and a final editor suggests titles and opening hooks. The application was built with Node.js and browser JavaScript. It includes a clearly labeled sample mode for demonstrations and an AI mode that calls the OpenAI API from the server. The project source and deployment instructions are available at \url{https://github.com/yoclipit/draftroom-agent}.
+Draftroom is a web application that turns a short writing brief into a blog article using a visible multi-stage agent workflow. A planner proposes an angle and outline, a writer creates a Markdown draft, a reviewer checks its quality, a reviser improves rejected work, and a final editor suggests titles and opening hooks. The application was built with Express 5 on Node.js and browser JavaScript. It includes a clearly labeled sample mode for demonstrations and an AI mode that calls the OpenAI API from the server. The project source and deployment instructions are available at \url{https://github.com/yoclipit/draftroom-agent}.
 
 \section{Problem and Goal}
 Starting with a topic alone often leads to an unfocused article. Draftroom asks for the intended audience, tone, goal, points to cover, and approximate length. It then exposes the writing process instead of showing only a final answer. The user can inspect the plan and editorial notes, copy the Markdown, or download it for further editing.
@@ -64,7 +64,7 @@ Packager & Final article and brief & Three title ideas and two opening hooks \\
 
 \newpage
 \section{Implementation}
-The server uses only Node.js built-in modules, so the project has no package dependencies. The interface uses HTML, CSS, and browser JavaScript. It is responsive, supports keyboard navigation, and renders article text with DOM text nodes rather than injecting model output as HTML. The server accepts only the defined API route and static files, limits brief size, and applies a simple per-IP request limit.
+The server uses Express 5 for routing, JSON parsing, and file delivery, with Node.js built-in modules for HTTP transport. The interface uses HTML, CSS, and browser JavaScript. It is responsive, supports keyboard navigation, and renders article text with DOM text nodes rather than injecting model output as HTML. The server accepts only the defined API route and static files, limits brief size, and applies a simple per-IP request limit.
 
 Structured JSON responses are requested for planning, review, and title generation. The article itself is returned as Markdown. Each stage sends a progress event to the browser, which updates the activity list. The reviewer returns an approval decision and concrete changes. If the draft is rejected, the reviser produces a new complete article and the reviewer evaluates it once more. This gives the loop both a success condition and a hard upper bound.
 

@@ -4,9 +4,10 @@ Draftroom is a web app that turns a short writing brief into a planned, reviewed
 
 ## Run locally
 
-Requires Node.js 20 or newer. There are no npm dependencies.
+Requires Node.js 20 or newer. The server uses Express 5.
 
 ```bash
+npm install
 npm start
 ```
 
@@ -16,12 +17,14 @@ To enable original AI generated articles, set an API key in the server environme
 
 ```powershell
 $env:OPENAI_API_KEY = "your-key-here"
-npm start
+npm.cmd install
+npm.cmd start
 ```
 
 On macOS or Linux:
 
 ```bash
+npm install
 OPENAI_API_KEY="your-key-here" npm start
 ```
 
@@ -46,7 +49,7 @@ The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/proj
 | File | Purpose |
 | --- | --- |
 | `agent.js` | Brief validation, model calls, agent prompts, review loop, sample mode |
-| `server.js` | HTTP server, static files, API route, streaming, basic rate limiting |
+| `server.js` | Express server, static files, API route, streaming, basic rate limiting |
 | `public/` | Responsive web interface |
 | `test/` | Agent flow and HTTP integration tests |
 | `render.yaml` | Render deployment blueprint |
@@ -56,6 +59,8 @@ The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/proj
 ```bash
 npm test
 ```
+
+On this Windows PowerShell setup, use `npm.cmd` instead of `npm`.
 
 The live workflow test uses a local mock API and verifies that a rejected article is revised and reviewed again. A real AI generation requires your own API key and account access.
 
