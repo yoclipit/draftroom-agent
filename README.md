@@ -80,7 +80,7 @@ The app is deployed at [draftroom-agent.onrender.com](https://draftroom-agent.on
 
 1. Push this repository to GitHub.
 2. In Render, create a **Blueprint** from the repository and apply `render.yaml`.
-3. For AI mode, set `OPENAI_API_KEY` as a secret environment variable in Render. The public site can run in sample mode without the key.
+3. For AI mode, set `OPENAI_API_KEY` in the Render service's **Environment** page. Paste the value there, not into this repository. The Blueprint declares the variable without a value, so a new Blueprint deployment asks for it. An existing service created from a public Git URL must be configured in its dashboard. The public site can run in sample mode without the key.
 4. Open the Render URL and generate a draft.
 
 The blueprint does not contain an API key. Add one privately in the Render dashboard only when AI mode is needed. Review AI generated claims and sources before publishing an article. The editor checks the brief and writing quality; it does not independently verify facts.
