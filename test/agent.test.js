@@ -4,6 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
 const { normalizeBrief, runAgent } = require('../agent');
+const { createDemoResult } = require('../demo');
 const { createServer } = require('../server');
 
 const brief = normalizeBrief({
@@ -28,6 +29,38 @@ test('sample workflow exposes the same visible stages and labels its result', as
   assert.match(result.article, /^# /);
   assert.equal(result.packaging.titles.length, 3);
   assert.deepEqual(events.filter(x => x.status === 'done').map(x => x.stage), ['plan', 'draft', 'review', 'package']);
+});
+
+test('sample preview responds to every brief setting and target length', () => {
+  const base = createDemoResult(brief);
+  const changes = [
+    { topic: 'How to start a neighborhood book club' },
+    { audience: 'Working parents' },
+    { tone: 'Thoughtful and professional' },
+    { goal: 'Help readers plan one small experiment this weekend' },
+    { mustInclude: 'Making a weekly schedule and inviting a friend' }
+  ];
+  for (const change of changes) {
+    const changed = createDemoResult(normalizeBrief({ ...brief, ...change }));
+    assert.notEqual(changed.article, base.article, `${Object.keys(change)[0]} should change the article`);
+    assert.notDeepEqual(changed.plan, base.plan, `${Object.keys(change)[0]} should change the plan`);
+  }
+  const professional = createDemoResult(normalizeBrief({
+    ...brief,
+    tone: 'Thoughtful and professional',
+    goal: 'Give readers a practical framework they can use today.',
+    mustInclude: 'Checking accuracy, protecting privacy, and using AI to support learning'
+  }));
+  assert.match(professional.article, /A useful approach begins with a clear purpose/);
+  assert.match(professional.article, /Checking accuracy/);
+  assert.match(professional.article, /protecting privacy/i);
+  assert.match(professional.article, /using AI to support learning/i);
+  const lengths = [350, 550, 750].map(wordCount => {
+    const article = createDemoResult(normalizeBrief({ ...brief, wordCount })).article;
+    return article.trim().split(/\s+/).length;
+  });
+  assert.ok(lengths[0] < lengths[1] && lengths[1] < lengths[2]);
+  lengths.forEach((actual, index) => assert.ok(Math.abs(actual - [350, 550, 750][index]) <= 75, `unexpected sample length: ${actual}`));
 });
 
 test('live workflow revises a rejected draft and stops after approval', async () => {

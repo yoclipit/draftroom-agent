@@ -135,17 +135,18 @@ function showResult(result) {
   $('result').hidden = false;
   $('outputState').textContent = 'DRAFT COMPLETE';
   $('resultMode').textContent = result.mode === 'demo' ? 'SAMPLE WORKFLOW' : `AI WORKFLOW · ${result.model}`;
-  $('resultHeading').textContent = result.review.approved ? 'Your draft is ready.' : 'Your draft needs a final look.';
+  $('resultHeading').textContent = result.mode === 'demo' ? 'Your sample draft is ready.' : (result.review.approved ? 'Your draft is ready.' : 'Your draft needs a final look.');
+  $('scoreBadge').hidden = result.mode === 'demo';
   $('scoreValue').textContent = `${result.review.score}/100`;
   $('resultDisclaimer').textContent = result.mode === 'demo'
-    ? 'Illustrative sample content. Switch to AI mode with a server API key for an original, topic-specific article.'
+    ? 'Template preview based on your brief. It changes with your settings, but it is not AI-written and its claims need checking before use.'
     : 'The editor checked the writing brief, but facts and sources still need your review before publishing.';
   $('wordCountLabel').textContent = `${result.article.trim().split(/\s+/).length} words · ${result.revisionCount} revision${result.revisionCount === 1 ? '' : 's'}`;
   renderMarkdown(result.article);
   $('planTitle').textContent = result.plan.workingTitle;
   $('planAngle').textContent = result.plan.angle;
   fillList('planOutline', result.plan.outline.map(item => `${item.heading} — ${item.notes}`));
-  $('reviewSummary').textContent = result.review.approved ? 'Approved by the editor' : 'The editor recommends another pass';
+  $('reviewSummary').textContent = result.mode === 'demo' ? 'Sample checklist completed' : (result.review.approved ? 'Approved by the editor' : 'The editor recommends another pass');
   fillList('reviewNotes', [...result.review.strengths.map(x => `Strength: ${x}`), ...result.review.fixes.map(x => `To improve: ${x}`)]);
   fillList('titleOptions', result.packaging.titles);
   fillList('hookOptions', result.packaging.hooks);
@@ -229,7 +230,7 @@ modeSelect.addEventListener('change', () => {
   setBusy(false);
   formNote.textContent = modeSelect.value === 'live'
     ? 'AI mode uses the server’s API key. The key is never sent to your browser.'
-    : 'Sample mode shows the workflow with illustrative content. Add a server API key to generate with AI.';
+    : 'Sample mode uses your brief to build a template preview. It works without an API key and does not use AI.';
 });
 $('articleTab').addEventListener('click', () => switchTab('article'));
 $('processTab').addEventListener('click', () => switchTab('process'));

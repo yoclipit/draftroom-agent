@@ -1,6 +1,6 @@
 # Draftroom
 
-Draftroom is a web app that turns a short writing brief into a planned, reviewed blog article. Its agent workflow follows a **plan → write → review → revise → package** cycle. A sample mode makes the flow easy to demonstrate without an API key; AI mode calls the OpenAI API from the server.
+Draftroom is a web app that turns a short writing brief into a planned, reviewed blog article. Its agent workflow follows a **plan → write → review → revise → package** cycle. Sample mode builds a template preview from the full brief without an API key; AI mode calls the OpenAI API from the server.
 
 **Live website:** [https://draftroom-agent.onrender.com](https://draftroom-agent.onrender.com)
 
@@ -40,7 +40,7 @@ The default model is `gpt-4o-mini`. Set `OPENAI_MODEL` to use another compatible
 4. **Reviser:** updates a rejected draft. A second review decides whether to stop. The loop also has a hard limit of one revision.
 5. **Packager:** supplies three title ideas and two opening hooks.
 
-The app streams each stage to the browser as Server Sent Events. The result includes the article, editor notes, outline, title ideas, and a Markdown download. Sample mode runs illustrative local content through the same visible stages; it is clearly labeled as a simulation.
+The app streams each stage to the browser as Server Sent Events. The result includes the article, editor notes, outline, title ideas, and a Markdown download. Sample mode responds to the topic, audience, tone, takeaway, requested points, and target length. It uses local templates and is labeled as a preview; it does not generate original AI writing or verify facts.
 
 ## Project report
 
@@ -50,7 +50,8 @@ The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/proj
 
 | File | Purpose |
 | --- | --- |
-| `agent.js` | Brief validation, model calls, agent prompts, review loop, sample mode |
+| `agent.js` | Brief validation, model calls, agent prompts, review loop |
+| `demo.js` | Local sample preview built from every brief setting |
 | `server.js` | Express server, static files, API route, streaming, basic rate limiting |
 | `public/` | Responsive web interface |
 | `test/` | Agent flow and HTTP integration tests |

@@ -73,7 +73,7 @@
               <div class="field field-length"><label for="wordCount">How long should it be?</label><select id="wordCount" name="wordCount"><option value="350">Short read · ~350 words</option><option value="550" selected>Medium read · ~550 words</option><option value="750">Deep dive · ~750 words</option></select></div>
               <div class="field"><label for="writingMode">Writing mode</label><select id="writingMode" name="writingMode"><option value="demo">Sample workflow (no API key)</option><option value="live" disabled>Generate with AI (needs server key)</option></select></div>
               <div class="form-actions"><button class="primary-button" id="generateButton" type="submit">Run sample workflow <span aria-hidden="true">↗</span></button><button class="secondary-button" id="cancelButton" type="button" hidden>Cancel</button></div>
-              <p class="form-note" id="formNote">Sample mode shows the workflow with illustrative content. Add a server API key to generate with AI.</p>
+              <p class="form-note" id="formNote">Sample mode uses your brief to build a template preview. It works without an API key and does not use AI.</p>
               <p class="form-error" id="formError" role="alert" hidden></p>
             </form>
           </section>
@@ -94,7 +94,7 @@
             </div>
 
             <div class="result" id="result" hidden>
-              <div class="result-banner"><div><span class="small-eyebrow" id="resultMode">SAMPLE WORKFLOW</span><h4 id="resultHeading">Your draft is ready.</h4></div><div class="score-badge"><strong id="scoreValue">—</strong><span>EDITOR SCORE</span></div></div>
+              <div class="result-banner"><div><span class="small-eyebrow" id="resultMode">SAMPLE WORKFLOW</span><h4 id="resultHeading">Your draft is ready.</h4></div><div class="score-badge" id="scoreBadge"><strong id="scoreValue">—</strong><span>EDITOR SCORE</span></div></div>
               <p class="result-disclaimer" id="resultDisclaimer"></p>
               <div class="tabs" role="tablist" aria-label="Draft details"><button class="tab active" id="articleTab" role="tab" aria-selected="true" aria-controls="articlePanel" type="button">Article</button><button class="tab" id="processTab" role="tab" aria-selected="false" aria-controls="processPanel" type="button">Behind the draft</button></div>
               <div class="tab-panel" id="articlePanel" role="tabpanel" aria-labelledby="articleTab">
