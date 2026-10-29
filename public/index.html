@@ -55,6 +55,13 @@
           <div><span class="section-number">02 / YOUR STUDIO</span><h2 id="workspace-title">Let's make something <em>worth reading.</em></h2></div>
           <div class="mode-pill" id="modePill"><span class="mode-dot"></span><span id="modeText">Checking AI connection…</span></div>
         </div>
+        <section class="assistant-card" aria-labelledby="assistant-title">
+          <div class="assistant-top"><div><span class="small-eyebrow">YOUR WRITING ASSISTANT</span><h3 id="assistant-title">Ask Draftroom to do it.</h3><p>Tell it what to change or ask it to create a draft. The brief and article update when it completes the task.</p></div><span class="assistant-mode" id="assistantMode">CHECKING MODE</span></div>
+          <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Assistant conversation"><div class="chat-message assistant-message">I can change your brief, generate a draft, and help you copy or download it. Try one of the suggestions below.</div></div>
+          <div class="chat-suggestions" aria-label="Example tasks"><button type="button" data-chat-prompt="Set tone to thoughtful and professional">Change tone</button><button type="button" data-chat-prompt="Make it shorter">Make it shorter</button><button type="button" data-chat-prompt="Generate a draft">Generate a draft</button></div>
+          <form class="chat-form" id="chatForm"><label class="sr-only" for="chatInput">Tell the assistant what to do</label><textarea id="chatInput" rows="2" maxlength="400" placeholder="E.g. Include privacy and make the draft shorter" required></textarea><button type="submit" id="chatSendButton">Send <span aria-hidden="true">↗</span></button></form>
+          <p class="chat-note" id="chatNote">Sample task mode uses local commands and templates. AI actions need a server API key.</p>
+        </section>
         <div class="workspace-grid">
           <section class="brief-card" aria-labelledby="brief-title">
             <div class="card-header"><span class="card-index">A</span><div><h3 id="brief-title">The brief</h3><p>A few details give the agents a better direction.</p></div></div>

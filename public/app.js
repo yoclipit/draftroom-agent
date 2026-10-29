@@ -2,6 +2,9 @@
 
 const $ = id => document.getElementById(id);
 const form = $('briefForm');
+const chatForm = $('chatForm');
+const chatInput = $('chatInput');
+const chatSendButton = $('chatSendButton');
 const modeSelect = $('writingMode');
 const generateButton = $('generateButton');
 const cancelButton = $('cancelButton');
@@ -17,6 +20,7 @@ const stages = [
 ];
 let controller = null;
 let lastResult = null;
+let chatBusy = false;
 
 function setBusy(busy) {
   generateButton.disabled = busy;
@@ -153,6 +157,83 @@ function showResult(result) {
   switchTab('article');
 }
 
+function applyBrief(brief) {
+  for (const key of ['topic', 'audience', 'tone', 'goal', 'mustInclude', 'wordCount']) {
+    if (brief[key] !== undefined) $(key).value = String(brief[key]);
+  }
+}
+
+function addChatMessage(kind, message, pending = false) {
+  const bubble = document.createElement('div');
+  bubble.className = `chat-message ${kind}-message${pending ? ' pending' : ''}`;
+  bubble.textContent = message;
+  $('chatMessages').append(bubble);
+  $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+  return bubble;
+}
+
+function setChatBusy(busy) {
+  chatBusy = busy;
+  chatInput.disabled = busy;
+  chatSendButton.disabled = busy;
+  for (const button of document.querySelectorAll('[data-chat-prompt]')) button.disabled = busy;
+}
+
+function updateChatMode() {
+  const live = modeSelect.value === 'live';
+  $('assistantMode').textContent = live ? 'AI CONNECTED' : 'SAMPLE TASK MODE';
+  $('chatNote').textContent = live
+    ? 'The assistant uses the server AI key to plan writing actions. Your key stays on the server.'
+    : 'Sample task mode uses local commands and templates. AI actions need a server API key.';
+}
+
+async function sendChat(message) {
+  if (chatBusy || controller) return;
+  const requestText = message.trim();
+  if (!requestText) return;
+  addChatMessage('user', requestText);
+  chatInput.value = '';
+  const pending = addChatMessage('assistant', 'Working on that…', true);
+  const earlyCopy = /^\s*(?:please\s+)?copy\b/i.test(requestText) && lastResult && navigator.clipboard?.writeText
+    ? navigator.clipboard.writeText(lastResult.article).then(() => true, () => false)
+    : null;
+  setChatBusy(true);
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: requestText, brief: getBrief(), article: lastResult?.article || '', mode: modeSelect.value })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || `Request failed (${response.status}).`);
+    applyBrief(data.brief);
+    if (data.result) {
+      $('emptyState').hidden = true;
+      showResult(data.result);
+      $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (data.brief && lastResult && JSON.stringify(data.brief) !== JSON.stringify(lastResult.brief)) {
+      $('outputState').textContent = 'BRIEF UPDATED';
+    }
+    let reply = data.reply;
+    if (data.clientAction === 'copy') {
+      const copied = earlyCopy ? await earlyCopy : (navigator.clipboard?.writeText ? await navigator.clipboard.writeText(lastResult.article).then(() => true, () => false) : false);
+      reply = copied ? 'Copied the current draft to your clipboard.' : 'Clipboard access was blocked. Use the Copy Markdown button beside the article.';
+    }
+    if (data.clientAction === 'download') {
+      $('downloadButton').click();
+      reply = 'Started the Markdown download for the current draft.';
+    }
+    pending.textContent = reply;
+  } catch (error) {
+    pending.textContent = error.message || 'The assistant could not complete that task.';
+  } finally {
+    pending.classList.remove('pending');
+    $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+    setChatBusy(false);
+    chatInput.focus({ preventScroll: true });
+  }
+}
+
 function switchTab(name) {
   const article = name === 'article';
   $('articlePanel').hidden = !article;
@@ -226,8 +307,22 @@ form.addEventListener('submit', async event => {
 });
 
 cancelButton.addEventListener('click', () => controller?.abort());
+chatForm.addEventListener('submit', event => {
+  event.preventDefault();
+  sendChat(chatInput.value);
+});
+chatInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    chatForm.requestSubmit();
+  }
+});
+for (const button of document.querySelectorAll('[data-chat-prompt]')) {
+  button.addEventListener('click', () => sendChat(button.dataset.chatPrompt));
+}
 modeSelect.addEventListener('change', () => {
   setBusy(false);
+  updateChatMode();
   formNote.textContent = modeSelect.value === 'live'
     ? 'AI mode uses the server’s API key. The key is never sent to your browser.'
     : 'Sample mode uses your brief to build a template preview. It works without an API key and does not use AI.';
@@ -262,8 +357,10 @@ fetch('/api/config').then(response => response.json()).then(config => {
   } else {
     $('modeText').textContent = 'SAMPLE MODE READY';
   }
+  updateChatMode();
   setBusy(false);
 }).catch(() => {
   $('modeText').textContent = 'SAMPLE MODE READY';
+  updateChatMode();
   setBusy(false);
 });

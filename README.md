@@ -1,6 +1,6 @@
 # Draftroom
 
-Draftroom is a web app that turns a short writing brief into a planned, reviewed blog article. Its agent workflow follows a **plan → write → review → revise → package** cycle. Sample mode builds a template preview from the full brief without an API key; AI mode calls the OpenAI API from the server.
+Draftroom is a web app that turns a short writing brief into a planned, reviewed blog article. Its agent workflow follows a **plan → write → review → revise → package** cycle. The chat assistant can change the brief, create a draft, and copy or download it. Sample mode builds a template preview without an API key; AI mode calls the OpenAI API from the server.
 
 **Live website:** [https://draftroom-agent.onrender.com](https://draftroom-agent.onrender.com)
 
@@ -42,6 +42,12 @@ The default model is `gpt-4o-mini`. Set `OPENAI_MODEL` to use another compatible
 
 The app streams each stage to the browser as Server Sent Events. The result includes the article, editor notes, outline, title ideas, and a Markdown download. Sample mode responds to the topic, audience, tone, takeaway, requested points, and target length. It uses local templates and is labeled as a preview; it does not generate original AI writing or verify facts.
 
+## Chat assistant
+
+The chat box can carry out writing tasks. Try **“set tone to thoughtful and professional,” “include checking sources and make it shorter,” “write a 350-word draft about community gardens for local volunteers,”** or **“download the draft.”** Changes appear in the brief and generated articles appear in the draft panel. The no-key version understands a limited set of commands and uses the local template writer. It does not pretend to be an AI model.
+
+When `OPENAI_API_KEY` is set, the chat uses a model to plan an allowed action. The server validates the plan and executes brief updates and draft generation or revision; the browser handles copy and download actions. A revision uses the current article as input and runs the writing review workflow again. The key remains on the server. Chat has no access to arbitrary websites, files, email, or system commands.
+
 ## Project report
 
 The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/project_report.pdf) explain the architecture, implementation, tests, and deployment status.
@@ -52,6 +58,7 @@ The [LaTeX source](report/project_report.tex) and [compiled PDF](output/pdf/proj
 | --- | --- |
 | `agent.js` | Brief validation, model calls, agent prompts, review loop |
 | `demo.js` | Local sample preview built from every brief setting |
+| `chat.js` | Chat task planning, allowed actions, and no-key commands |
 | `server.js` | Express server, static files, API route, streaming, basic rate limiting |
 | `public/` | Responsive web interface |
 | `test/` | Agent flow and HTTP integration tests |

@@ -106,6 +106,8 @@ test('HTTP server serves the app, protects the key, and streams a sample result'
     const home = await fetch(base);
     assert.equal(home.status, 200);
     assert.match(await home.text(), /Draftroom/);
+    const appScript = await fetch(`${base}/app.js`);
+    assert.equal(appScript.headers.get('cache-control'), 'no-cache');
     const config = await (await fetch(`${base}/api/config`)).json();
     assert.deepEqual(config, { aiAvailable: true, model: 'test-model' });
     assert.equal(JSON.stringify(config).includes('server-secret'), false);

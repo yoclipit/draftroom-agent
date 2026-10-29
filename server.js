@@ -4,6 +4,7 @@ const http = require('node:http');
 const path = require('node:path');
 const express = require('express');
 const { normalizeBrief, runAgent } = require('./agent');
+const { handleChat } = require('./chat');
 
 const PUBLIC = path.join(__dirname, 'public');
 const FILES = {
@@ -53,7 +54,7 @@ function createServer(config = {}) {
   for (const [route, [filename, contentType]] of Object.entries(FILES)) {
     app.get(route, (request, response) => {
       response.type(contentType);
-      response.set('Cache-Control', route === '/' ? 'no-cache' : 'public, max-age=3600');
+      response.set('Cache-Control', 'no-cache');
       response.sendFile(path.join(PUBLIC, filename));
     });
   }
@@ -61,6 +62,19 @@ function createServer(config = {}) {
   app.get('/api/config', (request, response) => {
     response.set('Cache-Control', 'no-store');
     response.json({ aiAvailable: Boolean(key), model: key ? model : null });
+  });
+
+  app.post('/api/chat', express.json({ limit: '32kb' }), async (request, response) => {
+    response.set('Cache-Control', 'no-store');
+    if (rateLimited(request)) return response.status(429).json({ error: 'Too many requests. Please wait a minute.' });
+    const controller = new AbortController();
+    response.on('close', () => controller.abort());
+    try {
+      const result = await handleChat(request.body, { key, model, url, signal: controller.signal });
+      if (!response.destroyed) response.json(result);
+    } catch (error) {
+      if (!response.destroyed) response.status(400).json({ error: error.message || 'The assistant could not complete that task.' });
+    }
   });
 
   app.post('/api/generate', express.json({ limit: '16kb' }), async (request, response) => {
